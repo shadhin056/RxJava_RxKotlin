@@ -9,6 +9,7 @@ import android.widget.TextView;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
+import kotlin.jvm.internal.PropertyReference0Impl;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -17,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     private Observer<String> myObserver;
     private final static String TAG = "myApp";
     private TextView txtMyText;
-
+    private Disposable disposable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSubscribe(Disposable d) {
                 Log.e(TAG, "OnSubscribe Invoke");
+                disposable =d;
             }
 
             @Override
@@ -46,5 +48,11 @@ public class MainActivity extends AppCompatActivity {
                 Log.e(TAG, "OnComplete Invoke");
             }
         };myObservable.subscribe(myObserver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 }
